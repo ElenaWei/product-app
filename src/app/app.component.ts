@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Product } from './product';
+import { ProductService } from './product.service';
+
 
 @Component({
   selector: 'app-root',
-
   template:`
   <h1>{{title}}</h1>
   <h2>My products</h2>
@@ -17,26 +18,28 @@ import { Product } from './product';
      </ul>
     <product-detail [product]="selectedProduct"></product-detail>
   `,
+  providers: [ProductService],
   styleUrls: ['./styles/productList.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'List of Products';
-  products = PRODUCTS;
+  //products = PRODUCTS;
   selectedProduct: Product;
+  products: Product[];
+
+  constructor(private productService: ProductService){ }
 
   onSelect(product: Product): void{
     this.selectedProduct = product;
   }
+  ngOnInit(): void {
+    this.getProducts();
+  }
+  getProducts(): void{
+    this.productService.getProducts().then(products =>this.products = products);
+  }
+
 }
 
-
-const PRODUCTS: Product[] = [
-  {id:11, name:'ThinkPab', description:'T430',price: 999, condition: "new", category: "laptop"},
-  {id:12, name:'Iphone', description:'7 Plus', price: 799, condition: "new", category: "mobile phone"},
-  {id:13, name:'Samsung', description:'Galaxy S8', price: 825, condition: "new", category: "mobile phone"},
-  {id:14, name:'Cartier', description:'W69010Z4', price: 2999, condition: "new", category: "watch"},
-  {id:15, name:'Rolex', description:'116610LV', price: 6999, condition: "used", category: "watch"},
-  {id:16, name:'MacBook', description:'Air', price: 999, condition: "new", category: "laptop"},
-];
 
 
